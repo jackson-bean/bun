@@ -2366,6 +2366,7 @@ pub const VirtualMachine = struct {
                 .hash = 0,
                 .allocator = null,
                 .source_code_needs_deref = false,
+                .module_info = null,
             };
         }
         var source = this.refCountedString(code, hash_, !add_double_ref);
@@ -2381,6 +2382,7 @@ pub const VirtualMachine = struct {
             .hash = source.hash,
             .allocator = source,
             .source_code_needs_deref = false,
+            .module_info = null,
         };
     }
 
