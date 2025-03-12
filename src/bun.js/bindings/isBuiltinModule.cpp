@@ -79,6 +79,7 @@ static constexpr ASCIILiteral builtinModuleNamesSortedLength[] = {
     "inspector/promises"_s,
     "_stream_passthrough"_s,
     "diagnostics_channel"_s,
+    "node:test"_s,
 };
 
 namespace Bun {
@@ -97,9 +98,22 @@ bool isBuiltinModule(const String& namePossiblyWithNodePrefix)
     }
 
     for (auto& builtinModule : builtinModuleNamesSortedLength) {
-        if (name == builtinModule)
+        if (namePossiblyWithNodePrefix == builtinModule)
             return true;
     }
+
+    // If no match found and the name has a "node:" prefix, try without the prefix
+    String name = namePossiblyWithNodePrefix;
+    if (name.startsWith("node:"_s)) {
+        name = name.substringSharingImpl(5);
+
+        // Check again with the prefix removed
+        for (auto& builtinModule : builtinModuleNamesSortedLength) {
+            if (name == builtinModule)
+                return true;
+        }
+    }
+
     return false;
 }
 
